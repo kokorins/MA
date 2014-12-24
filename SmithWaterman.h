@@ -4,9 +4,11 @@
 #include "SRMap.h"
 //#include "map.h"
 
+// TODO struct v
 const int MAX_CUTS = 32;
 const double BONUS = 0.3;
 const double MISS = -0.1;
+// ^
 
 const double MIN = -10000;
 
@@ -24,8 +26,8 @@ private:
 	int backi[MAX_CUTS][MAX_CUTS];
 	int backj[MAX_CUTS][MAX_CUTS];
 	int numVertex;
-	char graph[100000];
-	double penaltyMiss(double miss);
+	char graph[100000]; // string stream?
+	double penaltyMiss(double miss); // static?
 };
 
 #endif
