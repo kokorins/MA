@@ -2,13 +2,13 @@
 #include <algorithm>
 #include <fstream>
 
-double EPS = 0.000;
+double EPS = 0.000; // < Very funny
 
-double constCuts(int countCuts){
+double constCuts(int countCuts){ // static
 	return (countCuts + 1)* 0.1f;
 }
 
-bool Generator::isTrue(int probability) {
+bool Generator::isTrue(int probability) { // static
 	int i = rand() % probability;
 	if ((i % probability) == 1)
 		return true;
@@ -16,7 +16,7 @@ bool Generator::isTrue(int probability) {
 }
 
 
-SRMap Generator::GenerateMap(int countCuts) {
+SRMap Generator::GenerateMap(int countCuts) { // static
 	SRMap map;
 	for (int i = 0; i < countCuts; i++)
 	{
@@ -48,7 +48,7 @@ SRMap Generator::GenerateMap(int countCuts) {
 }
 
 
-SetSRMaps * Generator::GenerateSetMap(int countMaps) {
+SetSRMaps * Generator::GenerateSetMap(int countMaps) { // static
 	SetSRMaps * setMaps = new SetSRMaps;
 	setMaps->countMaps = countMaps;
 
@@ -61,8 +61,8 @@ SetSRMaps * Generator::GenerateSetMap(int countMaps) {
 }
 
 SetSRMaps * Generator::GenerateSetMap(char * filename) {
-	SetSRMaps * setMaps = new SetSRMaps;
-	std::ifstream in(filename);
+	SetSRMaps * setMaps = new SetSRMaps; // no need in heap allocation
+	std::ifstream in(filename); // TODO: checks on invalid input
 	int countMaps;
 	in >> countMaps;
 
@@ -75,14 +75,14 @@ SetSRMaps * Generator::GenerateSetMap(char * filename) {
 			in >> cut;
 			map.cuts.push_back(cut);
 		}
-		for (unsigned int j = 0; j < map.cuts.size() - 1; j++)
+		for (unsigned int j = 0; j < map.cuts.size() - 1; j++) // for(auto j=1; j<maps.cuts.size(); ++j)
 		{
-			map.difCuts.push_back(map.cuts[j + 1] - map.cuts[j]);
+			map.difCuts.push_back(map.cuts[j + 1] - map.cuts[j]); // maps.difCuts.push_back(map.cuts[j]-map.cuts[j-1]);
 		}
 		setMaps->maps.push_back(map);
 	}
 
-	in.close();
+	in.close(); // Destructor of in should call that
 	setMaps->countMaps = countMaps;
 	return setMaps;
 }
