@@ -3,14 +3,20 @@
 
 #include <vector>
 
-class SRMap
+class SRMap // struct?
 {
 public:
-	SRMap(void){};
-	~SRMap(void){};
+	SRMap(void){}; // hmm
+	~SRMap(void){}; // hmm
 
 	std::vector<double> cuts;
 	std::vector<double> difCuts;
 };
+/**
+ struct SRMap {
+ 	std::vector<double> cuts;
+ 	std::vector<double> frags;
+ }
+ */
 
 #endif
