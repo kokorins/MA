@@ -2,25 +2,22 @@
 #include <algorithm>
 #include <fstream>
 
-double EPS = 0.000;
-
 double constCuts(int countCuts){
 	return (countCuts + 1)* 0.1f;
 }
 
-bool Generator::isTrue(int probability) {
-	int i = rand() % probability;
-	if ((i % probability) == 1)
-		return true;
-	return false;
+bool Generator::isTrue(const double probability) const {
+	std::default_random_engine generator;
+	std::bernoulli_distribution distribution(probability);
+	return distribution(generator);
 }
 
 
-SRMap Generator::GenerateMap(int countCuts) {
+SRMap Generator::GenerateMap(int countCuts) const {
 	SRMap map;
 	for (int i = 0; i < countCuts; i++)
 	{
-		if (isTrue(probMissed))
+		if (isTrue(constants::probMissed))
 			continue;
 		double r;
 		bool isDup;
@@ -35,32 +32,32 @@ SRMap Generator::GenerateMap(int countCuts) {
 				}
 			}
 		}while(isDup);
-		if (isTrue(probError))
-			r += EPS * (rand() % 100);
+		if (isTrue(constants::probError))
+			r += constants::EPS * (rand() % 100);
 		map.cuts.push_back(r);
 	}
 	std::sort(map.cuts.begin(), map.cuts.end());
 	for (unsigned int j = 0; j < map.cuts.size() - 1; j++)
 	{
-		map.difCuts.push_back(map.cuts[j + 1] - map.cuts[j]);
+		map.frags.push_back(map.cuts[j + 1] - map.cuts[j]);
 	}
 	return map;
 }
 
 
-SetSRMaps * Generator::GenerateSetMap(int countMaps) {
+SetSRMaps * Generator::GenerateSetMap(int countMaps) const{
 	SetSRMaps * setMaps = new SetSRMaps;
 	setMaps->countMaps = countMaps;
 
 	for (int i = 0; i < countMaps; i++)
 	{
-		int countCuts = 1 + rand() % maxCountCuts;
+		int countCuts = 1 + rand() % constants::maxCountCuts;
 		setMaps->maps.push_back(GenerateMap(countCuts));
 	}
 	return setMaps;
 }
 
-SetSRMaps * Generator::GenerateSetMap(char * filename) {
+SetSRMaps * Generator::GenerateSetMap(const char * filename) const{
 	SetSRMaps * setMaps = new SetSRMaps;
 	std::ifstream in(filename);
 	int countMaps;
@@ -77,7 +74,7 @@ SetSRMaps * Generator::GenerateSetMap(char * filename) {
 		}
 		for (unsigned int j = 0; j < map.cuts.size() - 1; j++)
 		{
-			map.difCuts.push_back(map.cuts[j + 1] - map.cuts[j]);
+			map.frags.push_back(map.cuts[j + 1] - map.cuts[j]);
 		}
 		setMaps->maps.push_back(map);
 	}

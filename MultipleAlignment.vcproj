@@ -190,6 +190,10 @@
 				RelativePath=".\SRMap.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Utils.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -210,6 +214,10 @@
 			</File>
 			<File
 				RelativePath=".\SRMap.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utils.h"
 				>
 			</File>
 		</Filter>

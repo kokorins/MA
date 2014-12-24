@@ -87,15 +87,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Generator.cpp" />
     <ClCompile Include="SetSRMaps.cpp" />
     <ClCompile Include="SmithWaterman.cpp" />
     <ClCompile Include="src.cpp" />
     <ClCompile Include="SRMap.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Generator.h" />
     <ClInclude Include="SetSRMaps.h" />
     <ClInclude Include="SmithWaterman.h" />
     <ClInclude Include="SRMap.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

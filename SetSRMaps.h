@@ -4,12 +4,8 @@
 #include "SRMap.h"
 #include <vector>
 
-class SetSRMaps
+struct SetSRMaps
 {
-public:
-	SetSRMaps(void){};
-	~SetSRMaps(void){};
-
 	int countMaps;
 	std::vector<SRMap> maps;
 };

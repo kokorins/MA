@@ -22,16 +22,15 @@ int max3(int a, int b, int c)
 
 SmithWaterman::SmithWaterman()
 {
-	graph[0] = 0;
-	strcat(graph, "digraph D{\n");
+	ss << "digraph D{\n";
 }
 
 SmithWaterman::~SmithWaterman(void)
 {
-	strcat(graph, "}");
+	ss << "}";
 	std::ofstream fout;
 	fout.open("SmithWaterman.txt");
-	fout << graph;
+	fout << ss.str();
 	fout.close();
 }
 
@@ -39,20 +38,14 @@ void SmithWaterman::addMapToGraph(SRMap f, int fi)
 {
 	int fsize = f.cuts.size();
 	std::vector<double> fcuts = f.cuts;
-	std::vector<double> difCuts = f.difCuts;
+	std::vector<double> frags = f.frags;
 
-	char str1[128];
-	sprintf(str1,"subgraph cluster_%i {\n\tnode [style=filled];\n", fi);
-	strcat(graph, str1);
+	ss << "subgraph cluster_" << fi <<" {\n\tnode [style=filled];\n";
 	for (int i = 0; i < fsize - 1; i++)
 	{
-		char str[512];
-		sprintf(str, "\t\"%i, %i, %f\" -> \"%i, %i, %f\" [ label = %f] ;\n", fi, i, fcuts[i], fi, i + 1, fcuts[i + 1], difCuts[i]);
-		strcat(graph, str);
+		ss << "\t\"" << fi << ", " << i << ", " << fcuts[i] << "\" -> \"" << fi << ", " << i + 1 << ", " << fcuts[i + 1] << "\" [ label = " << frags[i] << "] ;\n";
 	}
-	char str2[128];
-	sprintf(str2,"\tlabel = \"Map %i\";\n\tcolor=blue\n}\n", fi);
-	strcat(graph, str2);
+	ss << "\tlabel = \"Map " << fi << "\";\n\tcolor=blue\n}\n";
 }
 
 void p(double *f, int l)
@@ -80,28 +73,28 @@ void indexMax(double &max, double tmax, int &imax, int &jmax, int i, int j)
 
 void SmithWaterman::align(SRMap f, SRMap s, int fi, int si)
 {
-	int fsize = f.difCuts.size(), ssize = s.difCuts.size();
+	int fsize = f.frags.size(), ssize = s.frags.size();
 	std::vector<double> fcuts = f.cuts, scuts = s.cuts;
-	std::vector<double> fdif = f.difCuts, sdif = s.difCuts;
+	std::vector<double> fdif = f.frags, sdif = s.frags;
 
 	for (int i = 0; i < fsize; i++)
-		t[i][ssize] = BONUS;
+		t[i][ssize] = constants::BONUS;
 	for (int i = 0; i < ssize; i++)
-		t[fsize][i] = BONUS;
-	t[fsize][ssize] = BONUS;
+		t[fsize][i] = constants::BONUS;
+	t[fsize][ssize] = constants::BONUS;
 
 	int imax = 0, jmax = 0;
-	double max = MIN, difsum;
+	double max = constants::MIN, difsum;
 	for (int i = fsize - 1; i > -1; i--)
 	{
 		for (int j = ssize - 1; j > -1; j--)
 		{
-			double tmax = MIN;
+			double tmax = constants::MIN;
 			difsum = 0;
 			for (int k = i + 1; k <= fsize; k++)
 			{
 				difsum += fdif[k - 1];
-				double h = t[k][j + 1] + MISS * (k - i - 1) + penaltyMiss(fabs(difsum - sdif[j])) + BONUS;
+				double h = t[k][j + 1] + constants::MISS * (k - i - 1) + penaltyMiss(fabs(difsum - sdif[j])) + constants::BONUS;
 				indexMax(tmax, h, backi[i][j], backj[i][j], k, j + 1);
 			}
 
@@ -109,7 +102,7 @@ void SmithWaterman::align(SRMap f, SRMap s, int fi, int si)
 			for (int k = j + 1; k <= ssize; k++)
 			{
 				difsum += sdif[k - 1];
-				double h = t[i + 1][k] + MISS * (k - j - 1) + penaltyMiss(fabs(difsum - fdif[i])) + BONUS;
+				double h = t[i + 1][k] + constants::MISS * (k - j - 1) + penaltyMiss(fabs(difsum - fdif[i])) + constants::BONUS;
 				indexMax(tmax, h, backi[i][j], backj[i][j], i + 1, k);
 			}
 
@@ -119,17 +112,16 @@ void SmithWaterman::align(SRMap f, SRMap s, int fi, int si)
 	}
 	int k = imax;
 	int l = jmax;
-	char str[128];
+
 	do
 	{
-		sprintf(str, "\t\"%i, %i, %f\" -> \"%i, %i, %f\"[color=\"red\",dir=\"both\"];\n", fi, k, fcuts[k], si, l, scuts[l]);
-		strcat(graph, str);
+		ss << "\t\"" << fi << ", " << k << ", " << fcuts[k] << "\" -> \"" << si << ", " << l << ", " << scuts[l] << "\"[color=\"red\",dir=\"both\"];\n";
 
 		k = backi[imax][jmax];
 		l = backj[imax][jmax];
 		imax = k;
 		jmax = l;
 	}while (imax != fsize && jmax != ssize);
-	sprintf(str, "\t\"%i, %i, %f\" -> \"%i, %i, %f\"[color=\"red\",dir=\"both\"];\n", fi, k, fcuts[imax], si, l, scuts[jmax]);
-	strcat(graph, str);
+	ss << "\t\"" << fi << ", " << k << ", " << fcuts[imax] << "\" -> \"" << si << ", " << l << ", " << scuts[jmax] << "\"[color=\"red\",dir=\"both\"];\n";
+
 }
