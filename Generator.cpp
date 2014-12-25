@@ -57,7 +57,7 @@ SetSRMaps * Generator::GenerateSetMap(int countMaps) const{
 	return setMaps;
 }
 
-SetSRMaps * Generator::GenerateSetMap(const char * filename) const{
+SetSRMaps * Generator::GenerateSetMap(const char * filename) {
 	SetSRMaps * setMaps = new SetSRMaps;
 	std::ifstream in(filename);
 	int countMaps;

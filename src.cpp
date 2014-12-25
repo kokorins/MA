@@ -1,30 +1,26 @@
 #include "SetSRMaps.h"
 #include "SmithWaterman.h"
 #include "Generator.h"
+
 #include <cstdio>
 #include <cstdlib>
 
+#include <memory>
+#include <iostream>
+
 int main(void)
 {
-	int countMaps = 2;
-	//Create maps
-	Generator gen;
-	//SetSRMaps * set = gen.GenerateSetMap(countMaps);
-	SetSRMaps * set = gen.GenerateSetMap("input.txt");
+  std::unique_ptr<SetSRMaps> set(Generator::GenerateSetMap("H:/code/ma/input.txt"));
 	SmithWaterman sw;
 
-	//Smith–Waterman
-	for (int i = 0; i < countMaps; i++)
-	{
+	//Smith Waterman
+  for (int i = 0; i < set->maps.size(); i++)
 		sw.addMapToGraph(set->maps[i], i);
-	}
-	for (int i = 0; i < countMaps; i++)
-	{
-		for (int j = 0; j < i; j++)
-		{
+  for (int i = 0; i < set->maps.size(); i++) {
+    for (int j = 0; j < i; j++) {
 			sw.align(set->maps[i], set->maps[j], i, j);
 		}
 	}
-	delete set;
+  std::cout<<sw.getDot();
 	return 0;
 }

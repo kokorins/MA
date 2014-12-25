@@ -3,10 +3,10 @@
 
 #include <vector>
 
- struct SRMap {
+struct SRMap {
  	std::vector<double> cuts;
  	std::vector<double> frags;
- };
+};
  
 
 #endif

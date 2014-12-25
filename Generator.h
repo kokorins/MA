@@ -4,14 +4,14 @@
 #include "SRMap.h"
 #include "SetSRMaps.h"
 #include "Utils.h"
+
 #include <random>
 
-class Generator
-{
+class Generator {
 public:
 	SRMap GenerateMap(const int countCuts) const;
-	SetSRMaps * GenerateSetMap(const int countMaps) const; // why bare pointer?
-	SetSRMaps * GenerateSetMap(const char * filename) const; // why bare pointer
+  SetSRMaps * GenerateSetMap(const int countMaps) const; //TODO: why bare pointer?
+  static SetSRMaps * GenerateSetMap(const char * filename); //TODO: why bare pointer
 	bool isTrue(const double probability) const;
 };
 

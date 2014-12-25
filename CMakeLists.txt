@@ -1,0 +1,11 @@
+cmake_minimum_required (VERSION 2.6)
+project (MA)
+ENABLE_TESTING()
+if(MSVC)
+else()
+  set(CMAKE_CXX_FLAGS "-Wall -pedantic -std=c++0x")
+endif()
+
+aux_source_directory(. MA_SRCS)
+file(GLOB_RECURSE MA_HDRS "*.h" "*.hpp")
+ADD_EXECUTABLE(ma ${MA_SRCS} ${MA_HDRS})

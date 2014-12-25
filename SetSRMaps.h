@@ -6,7 +6,7 @@
 
 struct SetSRMaps
 {
-	int countMaps;
+  int countMaps; // not needed
 	std::vector<SRMap> maps;
 };
 

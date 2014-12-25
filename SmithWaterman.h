@@ -9,12 +9,12 @@ class SmithWaterman
 {
 public:
 	SmithWaterman();
-	~SmithWaterman(void);
+  ~SmithWaterman(void); // Throwable destructor
 	
 	void addMapToGraph(SRMap f, int fi);
 	void align(SRMap f, SRMap s, int fi, int si);
-
 	static double penaltyMiss(double miss);
+  std::string getDot()const;
 private:
 	double t[constants::MAX_CUTS][constants::MAX_CUTS];
 	int backi[constants::MAX_CUTS][constants::MAX_CUTS];

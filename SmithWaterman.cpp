@@ -58,7 +58,12 @@ void p(double *f, int l)
 
 double SmithWaterman::penaltyMiss(double miss)
 {
-	return -miss;
+  return -miss;
+}
+
+std::string SmithWaterman::getDot() const
+{
+  return ss.str();
 }
 
 void indexMax(double &max, double tmax, int &imax, int &jmax, int i, int j)
@@ -75,7 +80,7 @@ void SmithWaterman::align(SRMap f, SRMap s, int fi, int si)
 {
 	int fsize = f.frags.size(), ssize = s.frags.size();
 	std::vector<double> fcuts = f.cuts, scuts = s.cuts;
-	std::vector<double> fdif = f.frags, sdif = s.frags;
+  std::vector<double> fFrags = f.frags, sFrags = s.frags;
 
 	for (int i = 0; i < fsize; i++)
 		t[i][ssize] = constants::BONUS;
@@ -93,16 +98,16 @@ void SmithWaterman::align(SRMap f, SRMap s, int fi, int si)
 			difsum = 0;
 			for (int k = i + 1; k <= fsize; k++)
 			{
-				difsum += fdif[k - 1];
-				double h = t[k][j + 1] + constants::MISS * (k - i - 1) + penaltyMiss(fabs(difsum - sdif[j])) + constants::BONUS;
+        difsum += fFrags[k - 1];
+        double h = t[k][j + 1] + constants::MISS * (k - i - 1) + penaltyMiss(fabs(difsum - sFrags[j])) + constants::BONUS;
 				indexMax(tmax, h, backi[i][j], backj[i][j], k, j + 1);
 			}
 
 			difsum = 0;
 			for (int k = j + 1; k <= ssize; k++)
 			{
-				difsum += sdif[k - 1];
-				double h = t[i + 1][k] + constants::MISS * (k - j - 1) + penaltyMiss(fabs(difsum - fdif[i])) + constants::BONUS;
+        difsum += sFrags[k - 1];
+        double h = t[i + 1][k] + constants::MISS * (k - j - 1) + penaltyMiss(fabs(difsum - fFrags[i])) + constants::BONUS;
 				indexMax(tmax, h, backi[i][j], backj[i][j], i + 1, k);
 			}
 
